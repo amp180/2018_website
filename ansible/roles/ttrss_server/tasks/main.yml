@@ -1,0 +1,64 @@
+---
+- name: Get credentials from vault
+  include_vars: credentials.yml
+
+- name: "Needs nginx to be the primary webserver."
+  include_role: name=common tasks_from=nginx_php
+
+- name: "Needs Postgesql."
+  include_role: name=common tasks_from=postgresql 
+
+- name: "Needs git to deploy."
+  include_role: name=common tasks_from=git
+
+- name: "Ensure ttrss postgres user exists."
+  become_user: postgres
+  become: yes
+  postgresql_user:
+    name: ttrss
+    password: md5{{ (ttrss_passwd+'ttrss') | hash('md5') }}
+    encrypted: yes
+    expires: infinity
+  notify: reload_postgresql
+
+- name: "Ensure ttrss postgres db exists."
+  become_user: postgres
+  become: yes
+  postgresql_db:
+    name: ttrss
+    owner: ttrss
+    encoding: UTF-8
+    lc_collate: C.UTF-8
+    lc_ctype: C.UTF-8
+    template: template0
+  notify: reload_postgresql
+
+- name: "Ensure /usr/share/nginx/ttrss exists."
+  shell: creates=/usr/share/nginx/ttrss mkdir /usr/share/nginx/ttrss; chown www-data:www-data /usr/share/nginx/ttrss
+
+- name: "Ensuring tt-rss files are present."
+  become_user: www-data
+  become: yes
+  git: dest=/usr/share/nginx/ttrss accept_hostkey=yes repo=https://tt-rss.org/git/tt-rss.git
+
+- name: "Ensuring ttrss nginx config is present."
+  template: src="../templates/nginx_ttrss.conf" dest="/etc/nginx/sites-available/ttrss.{{ inventory_hostname }}"
+  notify: reload_nginx
+
+- name: "Enable nginx site"
+  shell: cp /etc/nginx/sites-available/ttrss.{{ inventory_hostname }} /etc/nginx/sites-enabled/ttrss.{{ inventory_hostname }}
+  args: 
+    creates: /etc/nginx/sites-enabled/ttrss.{{ inventory_hostname }}
+
+- name: "Enable nginx certbot"
+  shell: certbot --agree-tos --email {{ email }} -n --nginx --redirect --hsts --staple-ocsp -d ttrss.{{ inventory_hostname }}
+  args: 
+    creates: /etc/letsencrypt/live/ttrss.{{ inventory_hostname }}*
+  notify: reload_nginx
+
+- name: "Ensuring ttrss config is present."
+  template: src="../templates/ttrss_config.php" dest="/usr/share/nginx/ttrss/config.php"
+  notify: reload_nginx
+
+- name: "Ensuring ttrss cron is present."
+  cron: name=update-ttrss minute=*/30 user=www-data job="/usr/bin/php /usr/share/nginx/ttrss/update.php --feeds --quiet"

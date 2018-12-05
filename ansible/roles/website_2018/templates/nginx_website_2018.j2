@@ -1,0 +1,24 @@
+
+upstream website_2018 {
+        # fail_timeout=0 means we always retry an upstream even if it failed
+        # to return a good HTTP response (in case the Unicorn master nukes a
+        # single worker for timing out).
+        server 127.0.0.1:8888 fail_timeout=0;
+}
+
+server {
+    server_name {{ inventory_hostname }} www.{{ inventory_hostname }} default;
+
+    access_log /var/log/nginx/website_2018_access.log;
+    error_log /var/log/nginx/website_2018_error.log info;
+
+    location / {
+        proxy_pass           http://website_2018;
+    }
+
+   location /static/ {
+        autoindex         on;
+        alias             /home/website_2018/website_2018/static/;
+   }
+
+}

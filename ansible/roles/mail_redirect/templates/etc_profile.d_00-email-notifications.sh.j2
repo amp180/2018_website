@@ -1,0 +1,6 @@
+sender="`whoami`@{{ inventory_hostname }}"
+recepient="root"
+subject="Account login on pegman.space"
+message="`env`"
+
+echo "$message" | mail -s "$subject" -r "$sender" "$recepient"

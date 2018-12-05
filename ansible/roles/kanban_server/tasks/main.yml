@@ -1,0 +1,70 @@
+- name: Getting credentials
+  include_vars: credentials.yml
+
+- name: "Needs nginx to be the primary webserver."
+  include_role: name=common tasks_from=nginx_php
+
+- name: "Needs Postgesql."
+  include_role: name=common tasks_from=postgresql
+
+- name: "Needs Postgesql handlers."
+  include_role: name=common
+
+- name: "Needs git to deploy."
+  include_role: name=common tasks_from=git
+
+- name: "Needs certbot for certs."
+  include_role: name=common tasks_from=certbot
+
+- name: "Ensure kanboard postgres user exists."
+  become_user: postgres
+  become: yes
+  postgresql_user:
+    name: kanboard
+    password: md5{{ ('{{ kanboard_passwd }}'+'kanboard') | hash('md5') }}
+    encrypted: yes
+    expires: infinity
+  notify: reload_postgres
+
+- name: "Ensure kanboard postgres db exists."
+  become_user: postgres
+  become: yes
+  postgresql_db:
+    name: kanboard
+    owner: kanboard
+    encoding: UTF-8
+    lc_collate: C.UTF-8
+    lc_ctype: C.UTF-8
+    template: template0
+  notify: reload_postgres
+
+- name: "Ensure /usr/share/nginx/kanboard exists."
+  shell: creates=/usr/share/nginx/kanboard mkdir /usr/share/nginx/kanboard; chown www-data:www-data /usr/share/nginx/kanboard
+
+- name: "Ensuring kanboard files are present."
+  become_user: www-data
+  become: yes
+  git: dest=/usr/share/nginx/kanboard accept_hostkey=yes repo=https://github.com/kanboard/kanboard version=v1.2.4
+
+- name: "Ensuring kanboard nginx config is present."
+  template: src="../templates/nginx_kanboard.conf.j2" dest="/etc/nginx/sites-available/kanboard.{{ inventory_hostname }}"
+  notify: reload_nginx
+
+- name: "Enable nginx site"
+  shell: cp /etc/nginx/sites-available/kanboard.{{ inventory_hostname }} /etc/nginx/sites-enabled/kanboard.{{ inventory_hostname }} 
+  args: 
+    creates: "/etc/nginx/sites-enabled/kanboard.{{ inventory_hostname }}"
+  notify: reload_nginx
+
+- name: "Enable nginx certbot"
+  shell: certbot --agree-tos --email {{ email }} -n --nginx --expand --staple-ocsp --hsts --redirect -d kanboard.{{ inventory_hostname }} 
+  args: 
+    creates: /etc/letsencrypt/live/kanboard.{{ inventory_hostname }}*
+  notify: reload_nginx
+
+- name: "Ensuring kanboard config is present."
+  template: src="../templates/config.default.php.j2" dest="/usr/share/nginx/kanboard/config.php"
+  notify: reload_nginx
+
+- name: "Ensuring kanboard cronjob is present."
+  cron: name=update-kanboard minute=0 hour=8 user=www-data job="cd /usr/share/nginx/kanboard; ./cli cronjob"

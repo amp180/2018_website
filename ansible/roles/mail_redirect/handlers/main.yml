@@ -1,0 +1,12 @@
+---
+- name: reload_opendkim
+  service: name=opendkim state=reloaded
+
+- name: reload_postfix
+  service: name=postfix state=reloaded
+
+- name: reload_dovecot 
+  service: name=dovecot state=reloaded
+
+- name: reload_postsrsd 
+  service: name=postsrsd state=reloaded

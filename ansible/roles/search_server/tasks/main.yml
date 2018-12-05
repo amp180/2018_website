@@ -1,0 +1,72 @@
+- name: Get credentials from vault
+  include_vars: credentials.yml
+
+- name: "Needs nginx to be the primary webserver."
+  include_role: name=common tasks_from=nginx_php
+
+- name: "Needs pip"
+  include_role: name=common tasks_from=pip
+
+- name: "Needs supervisord"
+  include_role: name=common tasks_from=supervisord
+
+- name: "Ensure searx user exists"
+  user: 
+    name: searx
+    home: /home/searx
+    create_home: yes
+    state: present
+    group: www-data
+
+- name: "Ensuring /home/searx exists."
+  shell: mkdir /home/searx ; chown searx:www-data /home/searx ; 
+  args:
+    creates: /home/searx
+
+- name: "Ensuring /var/log/searx exists."
+  shell: mkdir /var/log/searx ; chown searx:www-data /var/log/searx ; 
+  args:
+    creates: /var/log/searx
+
+- name: "Ensuring searx files are present."
+  become_user: searx
+  become: yes
+  git: dest=/home/searx/searx accept_hostkey=yes clone=yes update=no repo=https://github.com/asciimoo/searx.git
+
+- name: "Update searx dependencies."
+  become_user: searx
+  become: yes
+  shell: cd /home/searx/searx ;
+          pipenv --three ;
+          pipenv install gunicorn;
+          pipenv run ./manage.sh update_packages ;
+  args:
+    creates: /home/searx/searx/Pipfile.lock
+
+- name: "Set searx secret key."
+  lineinfile:
+    path: /home/searx/searx/searx/settings.yml
+    regexp: "    secret_key : \"ultrasecretkey\" # change this!"
+    line:   "    secret_key: \"{{ searx_secret_key }}\" "
+    state: present
+    backrefs: yes
+
+- name: "Ensure supervisord config is present."
+  template: src=supervisord_searx.conf.j2 dest=/etc/supervisor/conf.d/searx.conf
+  notify: reload_supervisord
+
+- name: "Ensuring searx nginx config is present."
+  template: src="../templates/nginx_searx.j2" dest="/etc/nginx/sites-available/search.{{ inventory_hostname }}"
+  notify: reload_nginx
+
+- name: "Enable nginx site"
+  shell: cp /etc/nginx/sites-available/search.{{ inventory_hostname }} /etc/nginx/sites-enabled/search.{{ inventory_hostname }} 
+  args: 
+    creates: /etc/nginx/sites-enabled/search.{{ inventory_hostname }}
+  notify: reload_nginx
+
+- name: "Run certbot on config."
+  shell: certbot --agree-tos --email {{ email }} -n --nginx --expand --staple-ocsp --hsts --redirect -d search.{{ inventory_hostname }}
+  args: 
+    creates: /etc/nginx/sites-enabled/search.{{ inventory_hostname }}*
+  notify: reload_nginx

@@ -1,0 +1,5 @@
+---
+
+httpd_port: 80
+httpd_ssl_port: 443
+email: root@{{ inventory_hostname }}

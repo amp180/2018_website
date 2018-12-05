@@ -1,0 +1,30 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+importlib-resources = "*"
+responder = "<1.1.2"
+starlette = "<0.8.0"
+pyscss = "*"
+
+
+[dev-packages]
+ansible = "*"
+pipenv = "*"
+"flake8" = "*"
+"yapf" = "*"
+mypy = "*"
+
+[requires]
+python_version = "3.7"
+
+[scripts]
+"assets" = "python3 -m website_2018.assets"
+"test" = "python3 -m unittest discover"
+"lint" = "flake8 --ignore E402 --max-complexity 10"
+"format" = "yapf -ir --style google ."
+
+[pipenv]
+allow_prereleases = true

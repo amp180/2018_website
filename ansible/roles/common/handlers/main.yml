@@ -1,0 +1,9 @@
+---
+- name: reload_nginx
+  service: name=nginx state=reloaded
+
+- name: reload_postgresql
+  service: name=postgresql state=reloaded
+
+- name: reload_supervisord
+  service: name=supervisor state=reloaded

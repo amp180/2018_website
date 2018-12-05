@@ -1,0 +1,12 @@
+---
+- name: "Ensuring supervisord is installed."
+  apt: pkg=supervisor state=present
+
+- name: "Ensuring supervisord is running."
+  service:
+    name: supervisor
+    state: started
+    enabled: yes
+
+- name: supervisord_done
+  set_fact: supervisord_done=1

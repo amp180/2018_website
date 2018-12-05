@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="author" content="Adam Pegman">
+    <meta name="Description" content="Adam Pegman's CV website.">
+    <meta name="google-site-verification" content="LA6nkNr6xjLJHhzdcgANZiXf_XYpoxoH55ihFy4SbiU">
+    <link rel="icon" type="image/png" sizes="16x16" href="/static/images/favicon.ico">
+    <title>Adam Pegman</title>
+    <link rel="stylesheet" href="/static/css/main.css">
+    <script src="/static/js/homepage_background.js"></script>
+</head>
+<body class="homepage">
+<canvas class="homepage_background_canvas" id="background" role="presentation"></canvas>
+<main class="homepage_main">
+
+    <div class="homepage_top_page homepage_top_page_layout">
+        <img
+                class="homepage_top_img"
+                src="/static/images/DCU_IMG.jpg"
+                sizes="(max-width: 40em) 95vw, (min-width: 40em) 45vw"
+                srcset="/static/images/DCU_IMG_300w.png 300w, /static/images/DCU_IMG_400w.png 400w, /static/images/DCU_IMG_600w.png 600w, /static/images/DCU_IMG_800w.png 800w, /static/images/DCU_IMG_1000w.png 1000w, /static/images/DCU_IMG.jpg 1600w"
+                alt="Me."
+        >
+        <section class="homepage_top_text" id="homepage_top_text">
+            Hi! My name is Adam Pegman.
+            <br>I'm a software developer from County Wicklow.
+        </section>
+    </div>
+
+    <div class="homepage_page homepage_page_layout">
+        <section aria-labelledby="work_exp_title">
+            <h2 id="work_exp_title">Work Experience</h2>
+            <ul role="presentation">
+                <li>2017: Lab tutor at DCU for the Computer Architecture module.
+                     <ul> 
+                         <li>Assisted with labs for a second year X86 assembly module.
+                         <li>Created diagrams to explain the call stack to students.
+                         <li>Helped with supervising lab exams. 
+                     </ul>
+                <li>Summer 2017: Software development intern at AOL/Oath Technologies Ireland.
+                     <ul>  
+                         <li>Worked on Java microservices that configure ad campaigns.
+                             <ul>
+                                 <li>Created a common package for shared Maven dependencies.
+                                 <li>Extended the healthcheck APIS used for monitoring these services and wrote, tested and documented a client library.
+                             </ul>
+                         <li>Worked on an Python webapp.
+                             <ul>
+                                 <li>Wrote an OpenID Connect client to allow logins through single sign on.
+                                 <li>Integrated with Amazon KMS to store the encryption keys for configuration files.
+                             </ul>
+                     </ul>
+                <li>2015: Lab tutor at DCU for the Computer Programming I module. 
+                    <ul>
+                      <li>Helped first year students with their Python lab assignments.
+                      <li>Assisted supervising first year lab exams.
+                    </ul>
+            </ul>
+        </section>
+    </div>
+
+    <div class="homepage_page  homepage_page_layout homepage_page_with_rows">
+        <div class="homepage_page_row">
+            <section aria-labelledby="languages_title">
+                <h2 id="languages_title">Languages</h2>
+                <ul role="presentation">
+                    <li>Python
+                    <li>Java
+                    <li>C
+                    <li>HTML
+                    <li>Sass
+                </ul>
+            </section>
+            <section aria-labelledby="frameworks_title">
+                <h2 id="frameworks_title">Frameworks</h2>
+                <ul role="presentation">
+                    <li>Springboot
+                    <li>Django
+                    <li>Flask
+                </ul>
+            </section>
+            <section aria-labelledby="tools_title">
+                <h2 id="tools_title">Tools</h2>
+                <ul role="presentation">
+                    <li>Git
+                    <li>Ansible
+                    <li>Jenkins
+                    <li>Gradle
+                    <li>Pipenv
+                </ul>
+            </section>
+        </div>
+    </div>
+
+    <div class="homepage_page homepage_page_layout">
+        <section aria-labelledby="education_title">
+            <h2 id="education_title">Education</h2>
+            <ul role="presentation">
+              <li>2014-2018: BSc. Computer Applications at Dublin City University 
+              <li>2008-2014: Leaving Cert at St Davids Greystones
+            </ul>
+        </section>
+    </div>
+
+   <div class="homepage_page homepage_page_layout">
+        <div class="full_width">
+          <h2 class="page_title" id="linkstitle">Links</h2>
+          <section class="homepage_page_layout" style="width: 100%;" aria-labelledby="linkstitle">                 
+
+            <div class="linkedin_card" aria-label="Acclaim card for a junos cert.">
+              <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="a304d921-5a85-4fca-80cd-127cbbe5d446" style="background: white;">
+		  <script type="text/javascript" async defer>
+		        (function() {
+		          var s = document.createElement('script');
+		          s.type = 'text/javascript';
+		          s.async = true;
+		          s.src = '//cdn.youracclaim.com/assets/utilities/embed.js';
+		          var o = document.getElementsByTagName('script')[0];
+		          o.parentNode.insertBefore(s, o);
+		          })();
+		  </script>
+              </div> 
+           </div>
+
+           <div aria-label="Linkedin card" class="LI-profile-badge"  data-version="v1" data-size="medium" data-locale="en_US" data-type="horizontal" data-theme="dark" data-vanity="adam-pegman-a050a0131">
+             <a class="LI-simple-link" href='https://ie.linkedin.com/in/adam-pegman-a050a0131?trk=profile-badge'>Adam Pegman</a>
+             <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
+          </div>
+
+          <iframe aria-label="Github card." src="//githubbadge.appspot.com/Amp180?a=0"; style="border: 0;height: 142px;width: 200px;overflow: hidden;" frameBorder="0" async defer></iframe>
+       </section>
+     </div>
+   </div>
+
+</main>
+</body>
+</html>

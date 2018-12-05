@@ -1,0 +1,10 @@
+[program:searx]
+command=pipenv run gunicorn searx.webapp:app --bind unix:/tmp/searx.sock -w 2 --access-logfile /var/log/searx/searx-gunicorn-access.log
+directory=/home/searx/searx
+user=searx
+autostart=true
+autorestart=true
+stdout_logfile = /var/log/searx/supervisor-searx.log           ; Where to write log messages
+redirect_stderr=true       
+stdout_logfile_maxbytes=1MB                                         ; Save stderr in the same log
+environment=LANG=C.UTF-8,LC_ALL=C.UTF-8,HOME="/home/searx",USER="searx"		; Set UTF-8 as default encoding

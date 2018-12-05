@@ -1,0 +1,41 @@
+---
+- name: "Ensuring apache2 is not running and disabled."
+  service: 
+    name: apache2
+    state: stopped
+    enabled: no
+
+- name: "Ensuring that nginx and php are installed."
+  apt: 
+    pkg: [  
+      "nginx",
+      "php",
+      "php-fpm",
+      "php-curl",
+      "php-cli",
+      "php-mbstring",
+      "php-xml",
+      "php-mbstring",
+      "php-sqlite3",
+      "php-opcache",
+      "php-json",
+      "php-mysql",
+      "php-pgsql",
+      "php-ldap",
+      "php-gd"
+    ]
+    state: present
+
+- name: "Ensuring that nginx is enabled and started."
+  service: name=nginx state=started enabled=yes
+
+- name: "Ensuring the acl package is installed so ansible can become the www-data user."
+  apt: pkg=acl state=present
+
+- name: "Remove default nginx site, because it screws with certbot"
+  file: 
+    path: "/etc/nginx/sites-available/default"
+    state: absent
+
+- name: nginx_php_done
+  set_fact: nginx_php_done=1

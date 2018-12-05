@@ -1,0 +1,78 @@
+- name: "Needs nginx to be the primary webserver."
+  include_role: name=common tasks_from=nginx_php 
+
+- name: "Needs pip"
+  include_role: name=common tasks_from=pip
+
+- name: "Needs supervisord"
+  include_role: name=common tasks_from=supervisord
+
+- name: "Needs rsync to install"
+  apt: 
+    pkg: rsync
+    state: present
+
+- name: "Ensure website_2018 user exists"
+  user: 
+    name: website_2018
+    home: /home/website_2018
+    create_home: yes
+    state: present
+    group: www-data
+
+- name: "Ensuring /home/website_2018 exists."
+  shell: mkdir /home/website_2018 ; chown  website_2018:www-data /home/website_2018 ; 
+  args:
+    creates: /home/website_2018
+
+- name: "Ensuring /var/log/website_2018 exists."
+  shell: mkdir /var/log/website_2018 ; chown website_2018:www-data /var/log/website_2018 ; 
+  args:
+    creates: /var/log/website_2018
+
+- name: "Ensuring  website_2018 files are present."
+  synchronize:
+    src: "{{ playbook_dir+'/../' }}"
+    dest: /home/website_2018/
+    recursive: yes
+    delete: yes
+    rsync_opts:
+      - "-og"
+      - "--chown=website_2018:www-data"
+      - "--exclude=.git"
+      - "--exclude=ansible"
+      - "--exclude=ansible@tmp"
+      - "--exclude=Jenkinsfile"
+      - "--exclude=.local"
+      - "--exclude=.cache"
+      - "--exclude=.virtualenvs"
+      - "--exclude=.ansible"
+  notify: reload_supervisord
+
+- name: "Update dependencies."
+  become_user: website_2018
+  become: yes
+  command: chdir=/home/website_2018/ python3 -m pipenv install
+  notify: reload_supervisord
+
+#- name: "Recompile assets."
+#  become_user: website_2018
+#  become: yes
+#  command: chdir=/home/website_2018/ python3 -m pipenv run assets
+#  notify: reload_supervisord
+
+- name: "Ensure supervisord config is present."
+  template: src=supervisord_website_2018.conf.j2 dest=/etc/supervisor/conf.d/website_2018.conf
+  notify: reload_supervisord
+
+- name: "Ensuring website_2018 nginx config is present."
+  template: src="../templates/nginx_website_2018.j2" dest="/etc/nginx/sites-available/{{ inventory_hostname }}"
+  notify: reload_nginx
+
+- name: "Enable nginx site"
+  template: src="../templates/nginx_website_2018.j2" dest="/etc/nginx/sites-enabled/{{ inventory_hostname }}"
+  notify: reload_nginx
+
+- name: "Run certbot on config."
+  shell: certbot --agree-tos --email {{ email }} -n --nginx --expand --staple-ocsp --hsts --redirect -d {{ inventory_hostname }}
+  notify: reload_nginx

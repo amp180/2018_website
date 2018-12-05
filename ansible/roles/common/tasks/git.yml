@@ -1,0 +1,6 @@
+---
+- name: "Ensuring that git is installed."
+  apt: pkg=git state=present
+  
+- name: git_done
+  set_fact: git_done=1

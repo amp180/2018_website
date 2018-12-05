@@ -1,0 +1,28 @@
+---
+- name: "Needs Nginx."
+  include_role: name=common tasks_from=nginx_php
+  when: nginx_php_done is not defined
+
+- name: "Ensure certbot-nginx is installed."
+  pip: name=certbot_nginx state=present
+
+- name: "Needs nginx to be the primary webserver."
+  include_role: name=website_2018 tasks_from=main
+
+- name: "Setup mail cert"
+  shell: service nginx stop;
+         certbot certonly --standalone --agree-tos --email {{ email }} -d mail.{{ inventory_hostname }};
+         service nginx start
+  args:
+         creates: /etc/letsencrypt/live/mail.{{ inventory_hostname }}*/privkey.pem
+
+- name: "Setup main cert"
+  shell: certbot --expand --nginx --staple-ocsp --hsts --redirect -d {{ inventory_hostname }}  -n
+  args:
+      creates: /etc/letsencrypt/live/{{ inventory_hostname }}*/privkey.pem
+
+- name: "Certbot Cron"
+  cron: name=certbot minute=3 hour=0 day=*/14 job="certbot renew --agree-tos --nginx -m amp180@gmail.com --renew-hook 'service nginx restart; service dovecot reload; service postfix reload '"
+  
+- name: certbot_done
+  set_fact: certbot_done=1

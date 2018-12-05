@@ -1,0 +1,7 @@
+@mixin prefix($prop, $val...) {
+  -webkit-#{$prop}: #{$val};
+  -moz-#{$prop}: #{$val};
+  -ms-#{$prop}: #{$val};
+  -o-#{$prop}:  #{$val};
+  #{$prop}: #{$val};
+}

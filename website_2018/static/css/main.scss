@@ -1,0 +1,96 @@
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  box-sizing: border-box; }
+
+  .homepage {
+    margin: 0 0 0 0;
+    color: white;
+    font-size: 1.5em; }
+
+    .homepage_background_canvas {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -3;
+      background-color: #15252D; }
+
+      .homepage_top_page {
+        width: 100%;
+        min-height: 100vh;
+        padding: 1em 1em 1em 1em;
+        display: flex;
+        justify-content: space-around;
+        align-items: center; }
+        @media (max-width: 600px) {
+          .homepage_top_page {
+            flex-direction: column-reverse;   }
+}
+          @media (min-width: 600px) {
+            .homepage_top_page {
+              flex-direction: row-reverse;   }
+}
+
+.homepage_top_img {
+  height: auto;
+  border-radius: 3rem;
+  max-width: 100%; }
+  @media (min-width: 600px) {
+    .homepage_top_img {
+      max-width: 30%;   }
+}
+
+.homepage_top_text {
+  display: block; }
+
+  .homepage_page {
+    display: flex;
+    justify-content: space-around;
+    min-height: 100vh;
+    width: 100%;
+    padding: 1em 1em 1em 1em;
+    align-items: center;
+    border-top: 2px dotted white; }
+    @media (max-width: 600px) {
+      .homepage_page {
+        flex-direction: column;   }
+        .homepage_page > * + * {
+          margin-top: 1em;   }
+}
+    @media (min-width: 600px) {
+      .homepage_page {
+        flex-direction: row;   }
+}
+      * + .homepage_page {
+        border-top: 2px solid white; }
+
+.homepage_page_with_rows {
+  justify-content: flex-start;
+  padding: 1em 0; }
+  .homepage_page_with_rows > .homepage_page_row {
+    margin: 0 0;
+    padding: 0 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-around; }
+    @media (min-width: 600px) {
+      .homepage_page_with_rows > .homepage_page_row {
+        align-items: baseline;   }
+        .homepage_page_with_rows > .homepage_page_row > * {
+          width: 15vw;   }
+}
+    @media (max-width: 600px) {
+      .homepage_page_with_rows > .homepage_page_row {
+        flex-direction: column;
+        width: 100%;   }
+        .homepage_page_with_rows > .homepage_page_row > * {
+          padding: 1em 1em 1em 1em;
+          margin-top: 1em;   }
+}
+
+.homepage_main {
+  color: white; }

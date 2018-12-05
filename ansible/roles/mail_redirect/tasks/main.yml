@@ -1,0 +1,73 @@
+- name: Get credentials from vault.
+  include_vars: credentials.yml
+
+- name: "Needs certbot for certs."
+  include_role: name=common tasks_from=certbot
+
+- name: "Ensuring postfix is installed,"
+  apt: pkg=postfix state=present
+
+- name: "Ensuring dovecot is installed."
+  apt: pkg=dovecot-core state=present
+
+- name: "Ensuring opendkim is installed."
+  apt: pkg=opendkim state=present
+
+- name: "Ensuring opendkim defaults are present."
+  template: src="../templates/etc_default_opendkim.j2" dest="/etc/default/opendkim"
+  notify: reload_opendkim
+
+- name: "Ensuring opendkim config present."
+  template: src="../templates/etc_opendkim_conf.j2" dest="/etc/opendkim.conf"
+  notify: reload_opendkim
+
+- name: "Ensuring dkim key is present"
+  copy:
+    content: "{{ usr_share_dns_root_key }}"
+    dest: /usr/share/dns/root.key
+  notify: reload_opendkim
+
+- name: "Ensuring /etc/mailname is set to inventory_hostname."
+  copy:
+    content: "{{ inventory_hostname }}"
+    dest: /etc/mailname
+  notify: reload_postfix
+
+- name: "Ensuring dovecot main config is present."
+  template: src="../templates/etc_dovecot_conf_d_10-master_conf.j2" dest="/etc/dovecot/conf.d/10-master.conf"
+  notify: reload_dovecot
+
+- name: "Ensuring dovecot ssl config is present."
+  template: src="../templates/etc_dovecot_conf_d_10-ssl_conf.j2" dest="/etc/dovecot/conf.d/10-ssl.conf"
+  notify: reload_dovecot
+
+- name: "Ensuring dovecot auth config is present."
+  template: src="../templates/etc_dovecot_conf_d_10-auth_conf.j2" dest="/etc/dovecot/conf.d/10-auth.conf"
+  notify: reload_dovecot
+
+- name: "Ensuring postfix main config is present."
+  template: src="../templates/etc_postfix_main_cf.j2" dest="/etc/postfix/main.cf"
+  notify: reload_postfix
+
+- name: "Ensuring postfix master config is present."
+  template: src="../templates/etc_postfix_master_cf.j2" dest="/etc/postfix/master.cf"
+  notify: reload_postfix
+
+- name: "Ensuring login alert email config is present."
+  template: src="etc_profile.d_00-email-notifications.sh.j2" dest="/etc/profile.d/00-email-notifications.sh"
+
+- name: "Ensuring postsrsd is installed."
+  apt: pkg=postsrsd state=present
+
+- name: "Ensuring postsrsd config is present."
+  template: src="etc_default_postsrsd.j2" dest="/etc/default/postsrsd"
+
+- name: "Ensuring postsrsd secret is present"
+  copy:
+    content: "{{ postsrsd_secret }}"
+    dest: /etc/postsrsd.secret
+  notify: reload_postsrsd
+
+- name: "Ensure dovecot pop3 support is installed."
+  apt: pkg=dovecot-pop3d state=present
+

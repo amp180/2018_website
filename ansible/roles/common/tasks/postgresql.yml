@@ -1,0 +1,20 @@
+---
+- name: "Ensuring postgrsql is installed."
+  apt: 
+    pkg: ['php-pgsql', 'postgresql'] 
+    state: present
+
+- name: "Ensuring that postgres is enabled and started."
+  service: name=postgresql state=started enabled=yes
+
+- name: "Needs pip."
+  include_role: name=common tasks_from=pip
+
+- name: "Ensuring that the python postgres module is installed so ansible can administer the db." 
+  pip: name=psycopg2
+
+- name: "Ensuring the acl package is installed so ansible can become the postgres user."
+  apt: pkg=acl state=present
+
+- name: postgres_done
+  set_fact: postgres_done=1

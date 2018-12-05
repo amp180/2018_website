@@ -1,0 +1,15 @@
+[fcgi-program:website_2018]
+socket=tcp://127.0.0.1:8888
+command=pipenv run uvicorn --fd 0 website_2018.app:app 
+numprocs=2
+process_name=%(program_name)s_%(process_num)02d
+directory=/home/website_2018
+user=website_2018
+autostart=true
+autorestart=true
+killasgroup=True
+stdout_logfile = /var/log/website_2018/supervisor_%(program_name)s_%(process_num)02d.log           ; Where to write log messages
+stdout_logfile_maxbytes=1000
+redirect_stderr = true   
+redirect_stdout = true                                               ; Save stderr in the same log
+environment=LANG=C.UTF-8,LC_ALL=C.UTF-8,HOME=/home/website_2018,USER=website_2018 ; Set UTF-8 as default encoding

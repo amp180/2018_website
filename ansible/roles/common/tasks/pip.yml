@@ -1,0 +1,16 @@
+- name: "Ensuring that pip is installed."
+  apt: 
+    pkg: [
+      "python",
+      "python-pip",
+      "python3.7",
+      "python3-pip",
+      "python3.7-dev"
+    ] 
+    state: present
+
+- name: "Ensuring pipenv is installed."
+  pip: name=pipenv state=present
+
+- name: pip_done
+  set_fact: pip_done=1

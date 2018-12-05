@@ -1,0 +1,19 @@
+
+upstream searx {
+        # fail_timeout=0 means we always retry an upstream even if it failed
+        # to return a good HTTP response (in case the Unicorn master nukes a
+        # single worker for timing out).
+        server unix:/tmp/searx.sock fail_timeout=0;
+}
+
+server {
+    server_name search.{{ inventory_hostname }};
+
+    access_log /var/log/nginx/searx_access.log;
+    error_log /var/log/nginx/searx_error.log info;
+
+    location / {
+        proxy_pass           http://searx;
+    }
+
+}

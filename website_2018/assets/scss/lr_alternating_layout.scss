@@ -1,0 +1,16 @@
+%lr_alternating_layout {
+    counter-reset: alternating_grid_num;
+    display: grid;
+}
+
+%lr_alternating_layout_row {
+    counter-increment: section_num;
+    
+    &:nth-child(even){
+
+    }
+
+    &:nth-child(odd){
+
+    }
+}

@@ -1,0 +1,21 @@
+%hmf_layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: #{'minmax(33.3vh, 1fr) minmax(61.6vh, 1fr) minmax(5vh, auto)'};
+  grid-template-areas: 
+    "header"
+    "main"          
+    "footer";
+}
+
+%hmf_header {
+   grid-area: header;
+}
+
+%hmf_main {
+    grid-area: main;
+}
+
+%hmf_footer {
+   grid-area: footer;
+}

@@ -1,1 +1,1 @@
-ansible/** linguist-vendored
+ansible/roles/**/templates/** linguist-vendored

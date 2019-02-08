@@ -6,7 +6,7 @@ Written in python3 and responder. With sass for css preprocessing.
 
 I run the tests and ansible deploy pipeline in a jenkins instance running on an orange pi.
 
-The ansible playbook also configures my email server and a few self-hostsd web services I use.
+The ansible playbook also configures my email server and a few self-hosted web services I use.
 
 ## To run
 ```

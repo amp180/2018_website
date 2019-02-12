@@ -14,5 +14,5 @@ python -m pip install pipenv
 pipenv shell
 pipenv install --dev
 pipenv run assets
-python -m website_201
+python -m website_2018
 ```

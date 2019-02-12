@@ -2,7 +2,7 @@
 
 Source code for my website at http://pegman.space
 
-Written in python3 and responder. With sass for css preprocessing.
+Written in HTML and Sass. Served using uvicorn and responder. With sass for css preprocessing.
 
 I run the tests and ansible deploy pipeline in a jenkins instance running on an orange pi.
 

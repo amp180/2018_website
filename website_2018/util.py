@@ -8,6 +8,7 @@ import os
 
 log = logging.getLogger(__name__)
 
+
 def import_subpackages(name, path, env):
     """
         Imports all subpackages of the module defined by
@@ -27,10 +28,6 @@ def import_subpackages(name, path, env):
 
 
 def compile_scss(basedir, infile, outfile):
-    compiled = scss.compiler.compile_file(
-        Path(infile),
-    )
+    compiled = scss.compiler.compile_file(Path(infile),)
     with open(outfile, 'w') as o:
         o.write(compiled)
-    
-  

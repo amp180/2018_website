@@ -4,5 +4,4 @@
   roles:
   - mail_redirect
   - ttrss_server
-  - kanban_server
   - search_server

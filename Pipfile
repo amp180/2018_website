@@ -5,8 +5,8 @@ name = "pypi"
 
 [packages]
 importlib-resources = "*"
-responder = "<1.1.2"
-starlette = "<0.8.0"
+responder = "*"
+starlette = "*"
 pyscss = "*"
 
 

@@ -13,7 +13,7 @@
 </head>
 <body class="homepage">
 <canvas class="homepage_background_canvas" id="background" role="presentation"></canvas>
-<main class="homepage_main">
+<main class="homepage_main" role="main article" itemscope itemtype="https://schema.org/Person">
 
     <div class="homepage_top_page homepage_top_page_layout">
         <img
@@ -24,10 +24,19 @@
                 alt="Me."
         >
         <section class="homepage_top_text" id="homepage_top_text">
-            Hi! My name is Adam Pegman.
-            <br>I'm a software developer from County Wicklow.
+          Hi! My name is <span itemprop="name">Adam Pegman.</span>
+          <br>I'm a <span itemprop="jobTitle">software developer</span> from County Wicklow.
         </section>
     </div>
+    
+    <div class="homepage_page homepage_page_layout">
+        <section aria-labelledby="profile_title">
+            <h2 id="profile_title">Profile</h2>
+            <p>
+                A recent graduate of DCU from County Wicklow, currently living in North Dublin. Participated in lab tutoring first and second year students while in my third and final years. Have used Linux as a daily driver OS since 2010. I keep a personal website and mail server running on a Linux VPS, with version tracked code and configuration using Git, Ansible, and Jenkins to deploy changes. Work best on small teams but can work independently with a clear goal in mind. Looking for graduate roles in Software Development or DevOps.
+            </p>
+        </section>
+    </div> 
 
     <div class="homepage_page homepage_page_layout">
         <section aria-labelledby="work_exp_title">
@@ -108,20 +117,6 @@
         <div class="full_width">
           <h2 class="page_title" id="linkstitle">Links</h2>
           <section class="homepage_page_layout" style="width: 100%;" aria-labelledby="linkstitle">                 
-
-            <div class="linkedin_card" aria-label="Acclaim card for a junos cert.">
-              <div data-iframe-width="150" data-iframe-height="270" data-share-badge-id="a304d921-5a85-4fca-80cd-127cbbe5d446" style="background: white;">
-		  <script type="text/javascript" async defer>
-		        (function() {
-		          var s = document.createElement('script');
-		          s.type = 'text/javascript';
-		          s.async = true;
-		          s.src = '//cdn.youracclaim.com/assets/utilities/embed.js';
-		          var o = document.getElementsByTagName('script')[0];
-		          o.parentNode.insertBefore(s, o);
-		          })();
-		  </script>
-              </div> 
            </div>
 
            <div aria-label="Linkedin card" class="LI-profile-badge"  data-version="v1" data-size="medium" data-locale="en_US" data-type="horizontal" data-theme="dark" data-vanity="adam-pegman-a050a0131">
@@ -129,7 +124,7 @@
              <script type="text/javascript" src="https://platform.linkedin.com/badges/js/profile.js" async defer></script>
           </div>
 
-          <iframe aria-label="Github card." src="//githubbadge.appspot.com/Amp180?a=0"; style="border: 0;height: 142px;width: 200px;overflow: hidden;" frameBorder="0" async defer></iframe>
+          <iframe aria-label="Github card." src="//githubbadge.appspot.com/Amp180?a=0" style="border: 0;height: 142px;width: 200px;overflow: hidden;" frameBorder="0" async defer></iframe>
        </section>
      </div>
    </div>
